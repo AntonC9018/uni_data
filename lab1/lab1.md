@@ -52,3 +52,55 @@ Aceste pași trebuie să fie realizate pentru cele două baze de date: Adventure
 
     ![](images/cube_diagram.png)
 
+
+## Crearea cubului pe tema proprie
+
+Varianta: *3.*
+
+Tema: *Depozit de date în sistemul de vînzare a biletelor la autobus.*
+
+Fapte: vinzare_volum, vinzare_cantitati_bilete, Dimensiuni: timp, locatie, zona, tara.
+
+
+### Interpretarea sarcinii
+
+Faptul `vinzare_volum` cred că presupune suma de bani la care s-au vândut biletele într-o zi.
+Faptul `vinzare_cantitati_bilete` arată numărul de bilete.
+Nu văd sensule să pun aceste date în tabele diferite, deoarece sunt proporționale și se referă la același fapt conceptual.
+Din aceasta cauza, le voi face câmpurile în tabelul `Fact_Bilet`.
+
+Dimensiunile indică fiecare zi, fiecare loc de vânzare.
+Voi crea căte un tabel pentru timp (`Dim_Timp`) și pentru localicate (`Dim_Location`).
+
+Tabelul faptului va avea o referință la dimensiuni.
+
+### Crearea bazei de date și a tabelelor
+
+![](images/create_personal_db.png)
+
+[priviti codul folosit pentru crearea tabelelor](./sql/CreateTables.sql).
+
+![](images/user_creation_in_custom_db.png)
+
+
+### Adaugarea datelor în baza de date
+
+Am scris un program în D care l-am folosit pentru a genera datele în mod aleator.
+
+Pornesc programul, redirectând output-ul spre `output.sql`. Execut fișierul pentru a adăuga datele.
+
+Acum verific dacă au fost adăugate datele, folosind [interogarea](./sql/ShowData.sql).
+
+id    | vinzare_volum | vinzare_cantitati_bilete | locatie_id | timp_id | id  | locatie  | zona  | tara        | id | zi | luna | saptamana | an   | data_concreta
+------|---------------|--------------------------|------------|---------|-----|----------|-------|-------------|----|----|------|-----------|------|--------------
+2340  | 1703808.00    | 17748                    | 365        | 7       | 365 | Bruges   | Zone1 | Belgium     | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
+2935  | 1624896.00    | 17856                    | 354        | 9       | 354 | Antwerp  | Zone7 | Belgium     | 9  | 23 | 10   | 2         | 2022 | 2022-10-23
+2326  | 1590498.00    | 17478                    | 348        | 7       | 348 | Antwerp  | Zone1 | Belgium     | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
+13174 | 1505088.00    | 15678                    | 357        | 44      | 357 | Ghent    | Zone1 | Belgium     | 44 | 3  | 9    | 1         | 2023 | 2023-09-03
+11134 | 1477476.00    | 16236                    | 365        | 37      | 365 | Bruges   | Zone1 | Belgium     | 37 | 19 | 5    | 2         | 2023 | 2023-05-19
+2927  | 1418976.00    | 18192                    | 344        | 9       | 344 | Nijmegen | Zone1 | Netherlands | 9  | 23 | 10   | 2         | 2022 | 2022-10-23
+2932  | 1407624.00    | 15816                    | 350        | 9       | 350 | Antwerp  | Zone3 | Belgium     | 9  | 23 | 10   | 2         | 2022 | 2022-10-23
+2328  | 1396872.00    | 16056                    | 352        | 7       | 352 | Antwerp  | Zone5 | Belgium     | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
+2323  | 1384416.00    | 15048                    | 344        | 7       | 344 | Nijmegen | Zone1 | Netherlands | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
+13188 | 1369350.00    | 16110                    | 375        | 44      | 375 | Leuven   | Zone3 | Belgium     | 44 | 3  | 9    | 1         | 2023 | 2023-09-03
+2344  | 1361160.00    | 14328                    | 369        | 7       | 369 | Bruges   | Zone5 | Belgium     | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
