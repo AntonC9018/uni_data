@@ -52,6 +52,65 @@ Aceste pași trebuie să fie realizate pentru cele două baze de date: Adventure
 
     ![](images/cube_diagram.png)
 
+## Lansarea cubului în baza de date
+
+<!-- Dacă ne uităm la meniul de lansare (deployment) în proiectul în Visual Studio, vedem următoarea eroare:
+
+```
+Either the user, 'DESKTOP-SSIOI5J\Anton', does not have access to the 'AdventureWorks1' database, or the database does not exist.
+```
+
+Acum dacă ne uităm la setările bazei de date, vedem că numele bazei de date este AdventureWorks1, însă așa baza de date nu există. 
+
+![database name](images/AdventureWorks1.png) -->
+
+
+![deployment message](images/deployment_message.png)
+
+Primesc o eroare:
+
+```
+You cannot deploy the model because the localhost deployment server is not running in multidimensional mode.
+```
+
+### Rezolvarea erorii
+
+Soluția la această problemă am găsit-o [aici](https://www.sanssql.com/2013/11/change-ssas-deployment-mode-from.html). 
+[Aici](https://learn.microsoft.com/en-us/analysis-services/multidimensional-models/attach-and-detach-analysis-services-databases?view=asallproducts-allversions) se descrie ce înseamnă detașarea lor `multidimensional Analysis services databases` (pasul 2 din instrucțiuni).
+
+![](images/detach_task.png)
+
+După o apasare pe Script, arată Success.
+
+![](images/detached.png)
+
+Deoarece fișierul cu configurația msmdsrv.ini care trebuie modificat poate fi citit sau modificat doar de administratori, trebuie să modific permisiunile:
+
+![](images/permissions_mssql_config.png)
+
+Modific valoarea lui DeploymentMode de la 2 (Tabular) la 0 (Multidimensional).
+
+![](images/deployment_mode_modification.png)
+
+Acum trebuie să restartez Analyses Services.
+
+![](images/restart_analysis_services.png)
+
+Acum lansarea lucrează în Visual Studio.
+
+![](images/deployment_worked.png)
+
+### Lucrul cu cubul
+
+Lansez procesarea cubului:
+
+![](images/processing_of_cube.png)
+
+Acum lucrează și browser-ul.
+Eu nu știu ce să aștept din asta, de aceea pur și simplu arăt tabelul. Nu știu cum să analizez aceasta.
+
+![](images/browser.png)
+
 
 ## Crearea cubului pe tema proprie
 
