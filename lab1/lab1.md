@@ -342,7 +342,7 @@ Pentru a confirma că datele au fost adăugate, rulăm o interogare:
 ![](./images/query_new_table.png)
 
 
-### Concluziile
+### Concluzii
 
 Personal, nu aș folosi sistemul acesta în sisteme reale.
 Îmi plac mai mult sisteme realizate în limbaje de programare, 
