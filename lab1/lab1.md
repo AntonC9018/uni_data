@@ -172,9 +172,78 @@ ETL semnifică procesul Extract - Tranform - Load care integrează datele din ma
 într-un singur data warehouse, într-un format integru comun.
 Acesta este necesar pentru a rula algoritmele de analiză a datelor în continuare.
 
+În continuare, vom încărca fișierele plate de date mostră într-un proiect nou ETL,
+și le vom transforma în formatul acestora din baza de date AdventureWorks. 
+
 ### Instalarea componentelor
 
 În plus, doar trebuie să mai instalăm pachetul [SQL Server Integration Services (SSIS) Tutorial Files](https://www.microsoft.com/en-us/download/details.aspx?id=56827).
-Acesta conține datele mostră.
-Acestea trebuie fi plasate în folderul `C:\Program Files\Microsoft SQL Server\100\Samples\Integration Services\Tutorial\Creating a Simple ETL Package`
-(este posibil să se plaseze și în alt loc, dar) astfel 
+Acesta conține datele mostră valutare. 
+<!-- Acestea trebuie fi plasate în folderul `C:\Program Files\Microsoft SQL Server\100\Samples\Integration Services\Tutorial\Creating a Simple ETL Package`
+(este posibil să se plaseze și în alt loc, dar astfel va trebui să configurați drumurile la mai multe locuri). -->
+Extragem aceasă arhivă undeva.
+
+Exemplu unui din fișiere: include datele de valoare medie a valutei și rata la sfârșitul zilei, denumirea valutei, și data cu ora. 
+
+```
+0.516022499	BRL	7/1/2005 0:00	0.514959576
+0.517089819	BRL	7/2/2005 0:00	0.517330574
+0.516555607	BRL	7/3/2005 0:00	0.514403292
+0.518268982	BRL	7/4/2005 0:00	0.519480519
+0.517625136	BRL	7/5/2005 0:00	0.516262261
+0.517330574	BRL	7/6/2005 0:00	0.519480519
+0.517330574	BRL	7/7/2005 0:00	0.516022499
+0.517330574	BRL	7/8/2005 0:00	0.520060801
+0.517330574	BRL	7/9/2005 0:00	0.517089819
+0.518403318	BRL	7/10/2005 0:00	0.520860461
+0.518161563	BRL	7/11/2005 0:00	0.51786639
+0.519076045	BRL	7/12/2005 0:00	0.520318435
+```
+
+### Crearea proiectului ETL
+
+Ca să creăm un proiect destinat dezvoltării unui pachet ETL, trebuie să 
+deschidem Visual Studio și să selectăm șablonul "Integration Services Project".
+
+![](./images/etl_projection_creation.png)
+
+![](./images/etl_projection_creation_1.png)
+
+### Încărcarea datelor plate în proiect
+
+În primul rând, trebuie să se creeze un "Flat File connection manager".
+Acesta permite specificarea locației fișierului, delimitorilor coloanelor,
+tipul de date pentru fiecare coloană.
+Acesta include și opțiunea Suggest Column Types pentru a ghici tipul datelor din propriu zise datele.
+
+Pentru fiecare tip de fișier de date, trebuie fi creată câte un astfel de manager.
+Deoarece toate datele din exemplu sunt în același format, ajunge să creăm unul singur 
+și să-l folosim pentru mai multe înregistrări.
+
+![](./images/new_connection_manager.png)
+
+![](./images/flat_file.png)
+
+Apăsăm `Add`. Apare o fereastră, unde indicăm numele, descriere.
+Selectăm fișierul `SampleCurrencyData.txt`, apasând butonul `Browse`.
+
+![](./images/flat_file_import.png)
+
+Acum dacă trecem în meniul `Columns`, vedem meniul de configurarea a tipurilor de coloane.
+
+![](./images/columns_menu.png)
+
+Trebuie să dăm câte un nume descriptiv la fiecare coloană și să le atribuim tipurile corecte de date.
+Pentru aceasta, trecem în meniul Advanced, și schimbăm denumirea la fiecare coloană, folosind
+grid-ul de proprietăți în partea dreaptă.
+
+![](./images/flat_file_columns.png)
+
+Apăsăm Suggest Types și facem click pe OK, lăsând toate opțiunile la valorile lor implicite.
+
+![](./images/suggest_types.png)
+
+Sistemul a putut ghici tipul de date la numere corect, dar a evaluat șirurile
+care reprezintă data și timpul ca simplu șiruri, dar nu ca `date`.
+Din această cauză trebuie s-o schimbăm la `date` manual.
+
