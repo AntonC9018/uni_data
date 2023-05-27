@@ -1,3 +1,5 @@
+# Laborator 1: Cubul OLAP
+
 ## Sarcini
 
 1. Să se creeze cubul OLAP;
@@ -165,8 +167,9 @@ id    | vinzare_volum | vinzare_cantitati_bilete | locatie_id | timp_id | id  | 
 2344  | 1361160.00    | 14328                    | 369        | 7       | 369 | Bruges   | Zone5 | Belgium     | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
 
 
+# Laboratorul 2: Pachetul ETL
 
-## Crearea pachetului ETL în baza exemplului Adventure Works
+## Introducere
 
 ETL semnifică procesul Extract - Tranform - Load care integrează datele din mai multe surse 
 într-un singur data warehouse, într-un format integru comun.
@@ -175,7 +178,7 @@ Acesta este necesar pentru a rula algoritmele de analiză a datelor în continua
 În continuare, vom încărca fișierele plate de date mostră într-un proiect nou ETL,
 și le vom transforma în formatul acestora din baza de date AdventureWorks. 
 
-### Instalarea componentelor
+## Instalarea componentelor
 
 În plus, doar trebuie să mai instalăm pachetul [SQL Server Integration Services (SSIS) Tutorial Files](https://www.microsoft.com/en-us/download/details.aspx?id=56827).
 Acesta conține datele mostră valutare. 
@@ -200,7 +203,7 @@ Exemplu unui din fișiere: include datele de valoare medie a valutei și rata la
 0.519076045	BRL	7/12/2005 0:00	0.520318435
 ```
 
-### Crearea proiectului ETL
+## Crearea proiectului ETL
 
 Ca să creăm un proiect destinat dezvoltării unui pachet ETL, trebuie să 
 deschidem Visual Studio și să selectăm șablonul "Integration Services Project".
@@ -209,7 +212,7 @@ deschidem Visual Studio și să selectăm șablonul "Integration Services Projec
 
 ![](./images/etl_projection_creation_1.png)
 
-### Încărcarea datelor plate în proiect
+## Încărcarea datelor plate în proiect
 
 În primul rând, trebuie să se creeze un "Flat File connection manager".
 Acesta permite specificarea locației fișierului, delimitorilor coloanelor,
@@ -248,7 +251,7 @@ care reprezintă data și timpul ca simplu șiruri, dar nu ca `date`.
 Din această cauză trebuie s-o schimbăm la `date` manual.
 
 
-### Configurarea managerului OLE
+## Configurarea managerului OLE
 
 Managerul OLE permite a se conecta la baza de date.
 
@@ -257,10 +260,12 @@ Managerul OLE permite a se conecta la baza de date.
 Acesta lucrează în același mod ca și din etapa setării cubului, de aceea nu arăt procedura de crearea.
 
 
-### Conectarea fluxului de date dintre intrare și destinație
+## Conectarea fluxului de date dintre intrare și destinație
 
 Ca să conectăm manager-urile acestea unul la altul, trebuie să creăm așa numitul Data Flow.
 Acesta include și mecanismele de transformare și curățare a datelor.
+
+### Crearea Data Flow
 
 ![](./images/data_flow_create.png)
 
@@ -276,6 +281,8 @@ Acum trebuie să adaugăm un Flat File source, care va încărca un fișier cu d
 Apăsăm de doi ori pentru a deschide meniul de configurare a sursei și apăsăm Ok.
 
 ![](./images/source_config.png)
+
+### Configurarea transformărilor
 
 Acum trebuie să configurăm în ce mod să se realizeze transformarea, folosind Lookup transformation:
 
@@ -313,6 +320,8 @@ Configurăm lookup-ul să mapeze CurrencyDate la DateKey, cheia principală din 
 
 ![](./images/date_key_map.png)
 
+### Conectarea destinației
+
 Rămâne să conectăm un OLE DB Destination pentru a realiza scrierea finală în baza de date.
 Conectăm ultimul Lookup la nodul de destinație (săgeata albastră).
 
@@ -332,7 +341,7 @@ Configurăm mapările pentru toate coloanele:
 
 Am terminat configurarea.
 
-### Rularea pachetului
+## Rularea pachetului
 
 Pentru a rula pachetul, apăsăm Start.
 În cazul meu, am primit mesajul că execuția s-a terminat cu succes.
@@ -342,9 +351,78 @@ Pentru a confirma că datele au fost adăugate, rulăm o interogare:
 ![](./images/query_new_table.png)
 
 
-### Concluzii
+## Concluzii
 
 Personal, nu aș folosi sistemul acesta în sisteme reale.
 Îmi plac mai mult sisteme realizate în limbaje de programare, 
 deoarece atunci aveți mai multă flexibilitate, și mai puțin duplicare de logică.
 Puteți utiliza și orice modalități de programare pentru a simplifica configurarea sistemului.
+
+
+# Laborator 3: Crearea unui Raport în SSRS
+
+## Introducere
+
+SSRS (SQL Server Reporting Services) este un instrument care permite ...
+
+## Crearea proiectului
+
+Deschidem Visual Studio și instanțiem șablonul Report Server Project.
+
+![](./images/report_project.png)
+
+![](./images/report_project_name.png)
+
+
+## Configurarea unui Data Source
+
+Procesul aici este asemănător cu cela descris anterior, de aceea nu explic detaliat.
+
+![](./images/create_data_source.png)
+
+![](./images/connection_properties.png)
+
+## Crearea reportului
+
+Apăsăm right click pe Reports, Add.
+Clar că selectăm conexiunea existentă, numai ce creată.
+
+### Configurarea interogării
+
+Raportul permite crearea interogării folosind builder-ul, sau a unei interogări SQL.
+Pentru simplitate, vom scrie textul interogării direct în wizard-ul de creare a raportului.
+
+Am elaborat astfel de interogare:
+
+![](./images/sql_query.png)
+
+Și am pus-o ca Query string
+
+Acum selectăm tipul. Vom lăsa varianta implicită.
+
+![](./images/type.png)
+
+Am configurat output-ul în așa mod:
+
+![](./images/report_output.png)
+
+Apăsăm Finish.
+
+## Vizualizarea rezultatelor
+
+Putem privi reportul, apăsând "Preview".
+
+![](./images/report_preview.png)
+
+Putem sălva reportul în formatul, de exemplu, PDF, apăsând iconița respectivă:
+
+![](./images/save_report.png)
+
+![](./images/pdf_in_browser.png)
+
+## Concluzii
+
+Funcția este utilă deoarece produce reporturi într-un format consistent.
+Are foarte multe opțini pe care nu le-am descris aici, ca, de exemplu, 
+modalitățile de vizualizare și de formatare a tabelelor, gruparea, totalizarea,
+adăugarea stilurilor, ș.a.
