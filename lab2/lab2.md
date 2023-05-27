@@ -8,7 +8,7 @@ Problema este că [nu mai putem folosi Data Mining în versiunile noi SSDT](http
 În această lucrare, eu voi ilustra conceptele lui DataMining folosind aplicația Weka.
 
 
-## Algoritmii folosite pentru Data Mining
+## Algoritmii folosiți pentru Data Mining
 
 Sunt patru categorii de aplicare a algoritmilor de Data Mining:
 
@@ -131,7 +131,7 @@ respectiv prin apăsarea șirului cu text.
 
 Apăsăm butonul start, și imediat vedem reportul cu rezultatele în partea dreapra:
 
-Informațiile despre algorimtul rulat și setul de date:
+Informațiile despre algoritmul rulat și setul de date:
 
 ```
 === Run information ===
@@ -227,3 +227,4 @@ De exemplu, apăsând "Visualze tree" putem vedea arborele de decizie în forma 
 
 Sunt foarte multe alte opțiuni, care eu nu le cunosc,
 dar care sunt cu siguranță utile în anumite situații.
+
