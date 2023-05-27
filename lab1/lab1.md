@@ -247,3 +247,104 @@ Sistemul a putut ghici tipul de date la numere corect, dar a evaluat șirurile
 care reprezintă data și timpul ca simplu șiruri, dar nu ca `date`.
 Din această cauză trebuie s-o schimbăm la `date` manual.
 
+
+### Configurarea managerului OLE
+
+Managerul OLE permite a se conecta la baza de date.
+
+![](./images/oledb.png)
+
+Acesta lucrează în același mod ca și din etapa setării cubului, de aceea nu arăt procedura de crearea.
+
+
+### Conectarea fluxului de date dintre intrare și destinație
+
+Ca să conectăm manager-urile acestea unul la altul, trebuie să creăm așa numitul Data Flow.
+Acesta include și mecanismele de transformare și curățare a datelor.
+
+![](./images/data_flow_create.png)
+
+Îi putem schimba denumirea, apăsând `F2` și scriind denumirea nouă.
+
+![](./images/data_flow_renamed.png)
+
+Acum trebuie să adaugăm un Flat File source, care va încărca un fișier cu date, folosind schema definită
+în Flat File connection manager creat anterior.
+
+![](./images/create_source.png)
+
+Apăsăm de doi ori pentru a deschide meniul de configurare a sursei și apăsăm Ok.
+
+![](./images/source_config.png)
+
+Acum trebuie să configurăm în ce mod să se realizeze transformarea, folosind Lookup transformation:
+
+- Prima transformare va face un lookup de CurrencyKey din tabelul DimCurrecy pe baza la coloana CurrencyID.
+
+- A doua transformare va face un lookup de DateKey din tabelul DimDate pe baza la coloana CurrencyDate.
+
+![](./images/lookup.png)
+
+Facem dublu click și trecem la meniul Connection.
+Aici, scriem următoarea interogarea SQL ca sursă de date.
+Această interogarea include toate datele din tabelul DimCurrency unde tipul valutei este unul din formate
+de intrare suportate.
+Acestea ca atare trebuie fi extrase din fișierele de intrare, dar drept test vom face doar așa.
+
+![](./images/lookup_query.png)
+
+Acum conectăm proprietățile CurrencyID cu CurrencyAlternateKey din baza de date pentru a realiza lookup-ul,
+și punem bifa pe lângă CurrencyKey ca s-o facem output-ul lookup-ului.
+
+![](./images/lookup_columns.png)
+
+Plasăm o componentă pentru al doilea lookup.
+Conectăm primul lookup (săgeata albastră) la componenta nouă.
+În fereastra care a apărul selectăm Matched Lookup.
+
+![](./images/connect_lookups.png)
+
+În meniul General alegem partial cache (tutorialul zice să facem așa, nu știu pentru ce este necesar).
+În meniul Connection alegem tabelul DimDate.
+
+![](./images/dim_date.png)
+
+Configurăm lookup-ul să mapeze CurrencyDate la DateKey, cheia principală din baza de date.
+
+![](./images/date_key_map.png)
+
+Rămâne să conectăm un OLE DB Destination pentru a realiza scrierea finală în baza de date.
+Conectăm ultimul Lookup la nodul de destinație (săgeata albastră).
+
+![](./images/output_connection.png)
+
+În meniul de configurare a noului nod, selectăm tabelul FactCurrencyRate:
+
+![](./images/fact_currency_rate.png)
+
+Apăsăm New pentru a crea un tabel destinație nou cu aceleași coloane ca și tabelul de referință.
+
+![](./images/new_table.png)
+
+Configurăm mapările pentru toate coloanele:
+
+![](./images/mappings.png)
+
+Am terminat configurarea.
+
+### Rularea pachetului
+
+Pentru a rula pachetul, apăsăm Start.
+În cazul meu, am primit mesajul că execuția s-a terminat cu succes.
+
+Pentru a confirma că datele au fost adăugate, rulăm o interogare:
+
+![](./images/query_new_table.png)
+
+
+### Concluziile
+
+Personal, nu aș folosi sistemul acesta în sisteme reale.
+Îmi plac mai mult sisteme realizate în limbaje de programare, 
+deoarece atunci aveți mai multă flexibilitate, și mai puțin duplicare de logică.
+Puteți utiliza și orice modalități de programare pentru a simplifica configurarea sistemului.
