@@ -163,3 +163,18 @@ id    | vinzare_volum | vinzare_cantitati_bilete | locatie_id | timp_id | id  | 
 2323  | 1384416.00    | 15048                    | 344        | 7       | 344 | Nijmegen | Zone1 | Netherlands | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
 13188 | 1369350.00    | 16110                    | 375        | 44      | 375 | Leuven   | Zone3 | Belgium     | 44 | 3  | 9    | 1         | 2023 | 2023-09-03
 2344  | 1361160.00    | 14328                    | 369        | 7       | 369 | Bruges   | Zone5 | Belgium     | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
+
+
+
+## Crearea pachetului ETL în baza exemplului Adventure Works
+
+ETL semnifică procesul Extract - Tranform - Load care integrează datele din mai multe surse 
+într-un singur data warehouse, într-un format integru comun.
+Acesta este necesar pentru a rula algoritmele de analiză a datelor în continuare.
+
+### Instalarea componentelor
+
+În plus, doar trebuie să mai instalăm pachetul [SQL Server Integration Services (SSIS) Tutorial Files](https://www.microsoft.com/en-us/download/details.aspx?id=56827).
+Acesta conține datele mostră.
+Acestea trebuie fi plasate în folderul `C:\Program Files\Microsoft SQL Server\100\Samples\Integration Services\Tutorial\Creating a Simple ETL Package`
+(este posibil să se plaseze și în alt loc, dar) astfel 
