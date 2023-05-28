@@ -294,7 +294,7 @@ Acum trebuie să configurăm în ce mod să se realizeze transformarea, folosind
 
 Facem dublu click și trecem la meniul "Connection".
 Aici, scriem următoarea interogarea SQL ca sursă de date.
-Această interogarea include toate datele din tabelul DimCurrency unde tipul valutei este unul din formate
+Această interogarea include toate datele din tabelul `DimCurrency` unde tipul valutei este unul din formate
 de intrare suportate.
 Acestea ca atare trebuie fi extrase din fișierele de intrare, dar drept test vom face doar așa.
 
@@ -423,6 +423,6 @@ Putem sălva reportul în formatul, de exemplu, PDF, apăsând iconița respecti
 ## Concluzii
 
 Funcția este utilă deoarece produce reporturi într-un format consistent.
-Are foarte multe opțini pe care nu le-am descris aici, ca, de exemplu, 
+Are foarte multe opțiuni pe care nu le-am descris aici, ca, de exemplu, 
 modalitățile de vizualizare și de formatare a tabelelor, gruparea, totalizarea,
 adăugarea stilurilor, ș.a.
