@@ -86,7 +86,7 @@ După o apasare pe Script, arată Success.
 
 ![](images/detached.png)
 
-Deoarece fișierul cu configurația msmdsrv.ini care trebuie modificat poate fi citit sau modificat doar de administratori, trebuie să modific permisiunile:
+Deoarece fișierul cu configurația `msmdsrv.ini` care trebuie modificat poate fi citit sau modificat doar de administratori, trebuie să modific permisiunile:
 
 ![](images/permissions_mssql_config.png)
 
@@ -120,7 +120,7 @@ Varianta: *3.*
 
 Tema: *Depozit de date în sistemul de vînzare a biletelor la autobus.*
 
-Fapte: vinzare_volum, vinzare_cantitati_bilete, Dimensiuni: timp, locatie, zona, tara.
+Fapte: `vinzare_volum`, `vinzare_cantitati_bilete`, Dimensiuni: `timp`, `locatie`, `zona`, `tara`.
 
 
 ### Interpretarea sarcinii
@@ -171,9 +171,9 @@ id    | vinzare_volum | vinzare_cantitati_bilete | locatie_id | timp_id | id  | 
 
 ## Introducere
 
-ETL semnifică procesul Extract - Tranform - Load care integrează datele din mai multe surse 
+ETL semnifică procesul Extract - Transform - Load care integrează datele din mai multe surse 
 într-un singur data warehouse, într-un format integru comun.
-Acesta este necesar pentru a rula algoritmele de analiză a datelor în continuare.
+Acesta este necesar în continuare pentru a rula algoritmele de analiză a datelor.
 
 În continuare, vom încărca fișierele plate de date mostră într-un proiect nou ETL,
 și le vom transforma în formatul acestora din baza de date AdventureWorks. 
@@ -227,17 +227,17 @@ Deoarece toate datele din exemplu sunt în același format, ajunge să creăm un
 
 ![](./images/flat_file.png)
 
-Apăsăm `Add`. Apare o fereastră, unde indicăm numele, descriere.
-Selectăm fișierul `SampleCurrencyData.txt`, apasând butonul `Browse`.
+Apăsăm "Add". Apare o fereastră, unde indicăm numele, descriere.
+Selectăm fișierul `SampleCurrencyData.txt`, apasând butonul "Browse".
 
 ![](./images/flat_file_import.png)
 
-Acum dacă trecem în meniul `Columns`, vedem meniul de configurarea a tipurilor de coloane.
+Acum dacă trecem în meniul "Columns", vedem meniul de configurarea a tipurilor de coloane.
 
 ![](./images/columns_menu.png)
 
 Trebuie să dăm câte un nume descriptiv la fiecare coloană și să le atribuim tipurile corecte de date.
-Pentru aceasta, trecem în meniul Advanced, și schimbăm denumirea la fiecare coloană, folosind
+Pentru aceasta, trecem în meniul "Advanced", și schimbăm denumirea la fiecare coloană, folosind
 grid-ul de proprietăți în partea dreaptă.
 
 ![](./images/flat_file_columns.png)
@@ -273,8 +273,8 @@ Acesta include și mecanismele de transformare și curățare a datelor.
 
 ![](./images/data_flow_renamed.png)
 
-Acum trebuie să adaugăm un Flat File source, care va încărca un fișier cu date, folosind schema definită
-în Flat File connection manager creat anterior.
+Acum trebuie să adaugăm un "Flat File source", care va încărca un fișier cu date, folosind schema definită
+în "Flat File connection manager" creat anterior.
 
 ![](./images/create_source.png)
 
@@ -286,13 +286,13 @@ Apăsăm de doi ori pentru a deschide meniul de configurare a sursei și apăsă
 
 Acum trebuie să configurăm în ce mod să se realizeze transformarea, folosind Lookup transformation:
 
-- Prima transformare va face un lookup de CurrencyKey din tabelul DimCurrecy pe baza la coloana CurrencyID.
+- Prima transformare va face un lookup de `CurrencyKey` din tabelul `DimCurrecy` pe baza la coloana `CurrencyID`.
 
-- A doua transformare va face un lookup de DateKey din tabelul DimDate pe baza la coloana CurrencyDate.
+- A doua transformare va face un lookup de `DateKey` din tabelul `DimDate` pe baza la coloana `CurrencyDate`.
 
 ![](./images/lookup.png)
 
-Facem dublu click și trecem la meniul Connection.
+Facem dublu click și trecem la meniul "Connection".
 Aici, scriem următoarea interogarea SQL ca sursă de date.
 Această interogarea include toate datele din tabelul DimCurrency unde tipul valutei este unul din formate
 de intrare suportate.
@@ -300,23 +300,23 @@ Acestea ca atare trebuie fi extrase din fișierele de intrare, dar drept test vo
 
 ![](./images/lookup_query.png)
 
-Acum conectăm proprietățile CurrencyID cu CurrencyAlternateKey din baza de date pentru a realiza lookup-ul,
-și punem bifa pe lângă CurrencyKey ca s-o facem output-ul lookup-ului.
+Acum conectăm proprietățile `CurrencyID` cu `CurrencyAlternateKey` din baza de date pentru a realiza lookup-ul,
+și punem bifa pe lângă `CurrencyKey` ca s-o facem output-ul lookup-ului.
 
 ![](./images/lookup_columns.png)
 
 Plasăm o componentă pentru al doilea lookup.
 Conectăm primul lookup (săgeata albastră) la componenta nouă.
-În fereastra care a apărul selectăm Matched Lookup.
+În fereastra care a apărul selectăm "Lookup Matched Output".
 
 ![](./images/connect_lookups.png)
 
-În meniul General alegem partial cache (tutorialul zice să facem așa, nu știu pentru ce este necesar).
-În meniul Connection alegem tabelul DimDate.
+În meniul "General" alegem partial cache (tutorialul zice să facem așa, nu știu pentru ce este necesar).
+În meniul "Connection" alegem tabelul `DimDate`.
 
 ![](./images/dim_date.png)
 
-Configurăm lookup-ul să mapeze CurrencyDate la DateKey, cheia principală din baza de date.
+Configurăm lookup-ul să mapeze `CurrencyDate` la `DateKey`, cheia principală din baza de date.
 
 ![](./images/date_key_map.png)
 
@@ -327,11 +327,11 @@ Conectăm ultimul Lookup la nodul de destinație (săgeata albastră).
 
 ![](./images/output_connection.png)
 
-În meniul de configurare a noului nod, selectăm tabelul FactCurrencyRate:
+În meniul de configurare a noului nod, selectăm tabelul `FactCurrencyRate`:
 
 ![](./images/fact_currency_rate.png)
 
-Apăsăm New pentru a crea un tabel destinație nou cu aceleași coloane ca și tabelul de referință.
+Apăsăm "New" pentru a crea un tabel destinație nou cu aceleași coloane ca și tabelul de referință.
 
 ![](./images/new_table.png)
 
@@ -343,7 +343,7 @@ Am terminat configurarea.
 
 ## Rularea pachetului
 
-Pentru a rula pachetul, apăsăm Start.
+Pentru a rula pachetul, apăsăm "Start".
 În cazul meu, am primit mesajul că execuția s-a terminat cu succes.
 
 Pentru a confirma că datele au fost adăugate, rulăm o interogare:
@@ -367,7 +367,7 @@ SSRS (SQL Server Reporting Services) este un instrument care permite ...
 
 ## Crearea proiectului
 
-Deschidem Visual Studio și instanțiem șablonul Report Server Project.
+Deschidem Visual Studio și instanțiem șablonul "Report Server Project".
 
 ![](./images/report_project.png)
 
@@ -384,7 +384,7 @@ Procesul aici este asemănător cu cela descris anterior, de aceea nu explic det
 
 ## Crearea reportului
 
-Apăsăm right click pe Reports, Add.
+Apăsăm right click pe "Reports", "Add".
 Clar că selectăm conexiunea existentă, numai ce creată.
 
 ### Configurarea interogării
@@ -396,7 +396,7 @@ Am elaborat astfel de interogare:
 
 ![](./images/sql_query.png)
 
-Și am pus-o ca Query string
+Și am pus-o ca "Query string".
 
 Acum selectăm tipul. Vom lăsa varianta implicită.
 
@@ -406,7 +406,7 @@ Am configurat output-ul în așa mod:
 
 ![](./images/report_output.png)
 
-Apăsăm Finish.
+Apăsăm "Finish".
 
 ## Vizualizarea rezultatelor
 
