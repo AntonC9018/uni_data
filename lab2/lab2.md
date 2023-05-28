@@ -24,6 +24,10 @@ Sunt patru categorii de aplicare a algoritmilor de Data Mining:
 3. Clustering:
     - Găsirea unor grupuri de date similare;
     - Algoritmii sunt următoarele: K-Means, Expectation Maximization, ș.a.
+
+4. Asocierea:
+    - Găsirea unor reguli de asociere între date;
+    - Algoritmii sunt următoarele: Apriori, FP-Growth, ș.a.
  
 
 În continuare, voi prezenta câteva exemple de algoritmi de Data Mining, ilustrate folosind aplicația Weka
@@ -228,3 +232,94 @@ De exemplu, apăsând "Visualze tree" putem vedea arborele de decizie în forma 
 Sunt foarte multe alte opțiuni, care eu nu le cunosc,
 dar care sunt cu siguranță utile în anumite situații.
 
+## Clusterizare
+
+Pentru acest exemplu, vom încărca setul de date care conține clasificările sticlei în funcție de compoziție chimică.
+Ar dori să eliminăm coloana cu tipul. Pentru aceasta, dăm click pe coloana Type și apăsăm butonul "Remove".
+
+![](./images/glass_data.png)
+
+Procedăm la meniul "Cluster" și alegem algoritmul unul din algoritme.
+Selectăm, de exemplu, algoritmul Cobweb, în același mod ca și la arbori de decizie.
+
+![](./images/cobweb_selection.png)
+
+Dacă intrăm în mod de vizualizare, putem privi diferitele proiecții ale spațiului de date la spațiul 2D,
+folosind diferitele perechi de atribute.
+La imaginea ce urmează arătăm proiecția pe axele "RI" și "Na", iar culoarea indică la ce cluster aparține punctul.
+
+![](./images/cobweb_2d.png)
+
+Am rulat și algoritmul K-Means, setând manual numărul de clusteri la 7 (ca în setul de date inițial):
+
+![](./images/kmeans_2d.png)
+
+
+## Asociere
+
+Pentru acest exemplu, vom încărca setul de date care conține informații despre cumpărături.
+Algoritmul de asociere este Apriori.
+Acesta indică care sunt combinațiile de produse care sunt cumpărate împreună
+și ce seturi de produse sunt cumpărate cu o probabilitate mare după în coș deja este un alt set de produse.
+Adică se derivă confidența că dacă un client a cumpărat un set de produse, atunci va cumpăra și alt set de produse.
+
+Am rulat algoritmul în meniul Associate, primind următoarele rezultate:
+
+```
+=== Run information ===
+
+Scheme:       weka.associations.Apriori -N 10 -T 0 -C 0.9 -D 0.05 -U 1.0 -M 0.1 -S -1.0 -c -1
+Relation:     supermarket
+Instances:    4627
+Attributes:   217
+              [list of attributes omitted]
+=== Associator model (full training set) ===
+
+
+Apriori
+=======
+
+Minimum support: 0.15 (694 instances)
+Minimum metric <confidence>: 0.9
+Number of cycles performed: 17
+
+Generated sets of large itemsets:
+
+Size of set of large itemsets L(1): 44
+
+Size of set of large itemsets L(2): 380
+
+Size of set of large itemsets L(3): 910
+
+Size of set of large itemsets L(4): 633
+
+Size of set of large itemsets L(5): 105
+
+Size of set of large itemsets L(6): 1
+```
+
+Și s-au găsit următoarele reguli (arăt într-o tabelă).
+
+| Antecedent (suport)                      | Consecvent  (suport) | Confidență | Lift | 
+|------------------------------------------|----------------------|------------|------|
+| biscuits, frozen foods, fruit (788)      | bread and cake (723) | 0.92       | 1.27 |
+| baking needs, biscuits, fruit (760)      | bread and cake (696) | 0.92       | 1.27 |
+| baking needs, frozen foods, fruit (770)  | bread and cake (705) | 0.92       | 1.27 |
+| biscuits, fruit, vegetables (815)        | bread and cake (746) | 0.92       | 1.27 |
+| party snack foods, fruit (854)           | bread and cake (779) | 0.91       | 1.27 |
+| biscuits, frozen foods, vegetables (797) | bread and cake (725) | 0.91       | 1.26 |
+| baking needs, biscuits, vegetables (772) | bread and cake (701) | 0.91       | 1.26 |
+| biscuits, fruit (954)                    | bread and cake (866) | 0.91       | 1.26 |
+| frozen foods, fruit, vegetables (834)    | bread and cake (757) | 0.91       | 1.26 |
+| frozen foods, fruit (969)                | bread and cake (877) | 0.91       | 1.26 |
+
+
+## Concluzii
+
+Weka este un instrument foarte puternic pentru analiza datelor.
+Este ușor de folosit și are o mulțime de algoritmi implementați.
+Este un instrument util pentru a înțelege cum funcționează diferiți algoritmi de inteligență artificială.
+Toate acestea având în vedere și faptul că în lucrare am folosit doar interfața principală a aplicației, 
+anume Explorer-ul, iar Weka conține și celelalte interfețe mai specializate.
+Nici nu se zice de faptul că sistemul Weka suportă programele în Java care pot accesa
+toate funcționalitățile sistemului din cod.
