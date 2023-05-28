@@ -1,3 +1,5 @@
+# Laborator 1: Cubul OLAP
+
 ## Sarcini
 
 1. Să se creeze cubul OLAP;
@@ -163,3 +165,264 @@ id    | vinzare_volum | vinzare_cantitati_bilete | locatie_id | timp_id | id  | 
 2323  | 1384416.00    | 15048                    | 344        | 7       | 344 | Nijmegen | Zone1 | Netherlands | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
 13188 | 1369350.00    | 16110                    | 375        | 44      | 375 | Leuven   | Zone3 | Belgium     | 44 | 3  | 9    | 1         | 2023 | 2023-09-03
 2344  | 1361160.00    | 14328                    | 369        | 7       | 369 | Bruges   | Zone5 | Belgium     | 7  | 14 | 10   | 2         | 2022 | 2022-10-14
+
+
+# Laboratorul 2: Pachetul ETL
+
+## Introducere
+
+ETL semnifică procesul Extract - Tranform - Load care integrează datele din mai multe surse 
+într-un singur data warehouse, într-un format integru comun.
+Acesta este necesar pentru a rula algoritmele de analiză a datelor în continuare.
+
+În continuare, vom încărca fișierele plate de date mostră într-un proiect nou ETL,
+și le vom transforma în formatul acestora din baza de date AdventureWorks. 
+
+## Instalarea componentelor
+
+În plus, doar trebuie să mai instalăm pachetul [SQL Server Integration Services (SSIS) Tutorial Files](https://www.microsoft.com/en-us/download/details.aspx?id=56827).
+Acesta conține datele mostră valutare. 
+<!-- Acestea trebuie fi plasate în folderul `C:\Program Files\Microsoft SQL Server\100\Samples\Integration Services\Tutorial\Creating a Simple ETL Package`
+(este posibil să se plaseze și în alt loc, dar astfel va trebui să configurați drumurile la mai multe locuri). -->
+Extragem aceasă arhivă undeva.
+
+Exemplu unui din fișiere: include datele de valoare medie a valutei și rata la sfârșitul zilei, denumirea valutei, și data cu ora. 
+
+```
+0.516022499	BRL	7/1/2005 0:00	0.514959576
+0.517089819	BRL	7/2/2005 0:00	0.517330574
+0.516555607	BRL	7/3/2005 0:00	0.514403292
+0.518268982	BRL	7/4/2005 0:00	0.519480519
+0.517625136	BRL	7/5/2005 0:00	0.516262261
+0.517330574	BRL	7/6/2005 0:00	0.519480519
+0.517330574	BRL	7/7/2005 0:00	0.516022499
+0.517330574	BRL	7/8/2005 0:00	0.520060801
+0.517330574	BRL	7/9/2005 0:00	0.517089819
+0.518403318	BRL	7/10/2005 0:00	0.520860461
+0.518161563	BRL	7/11/2005 0:00	0.51786639
+0.519076045	BRL	7/12/2005 0:00	0.520318435
+```
+
+## Crearea proiectului ETL
+
+Ca să creăm un proiect destinat dezvoltării unui pachet ETL, trebuie să 
+deschidem Visual Studio și să selectăm șablonul "Integration Services Project".
+
+![](./images/etl_projection_creation.png)
+
+![](./images/etl_projection_creation_1.png)
+
+## Încărcarea datelor plate în proiect
+
+În primul rând, trebuie să se creeze un "Flat File connection manager".
+Acesta permite specificarea locației fișierului, delimitorilor coloanelor,
+tipul de date pentru fiecare coloană.
+Acesta include și opțiunea Suggest Column Types pentru a ghici tipul datelor din propriu zise datele.
+
+Pentru fiecare tip de fișier de date, trebuie fi creată câte un astfel de manager.
+Deoarece toate datele din exemplu sunt în același format, ajunge să creăm unul singur 
+și să-l folosim pentru mai multe înregistrări.
+
+![](./images/new_connection_manager.png)
+
+![](./images/flat_file.png)
+
+Apăsăm `Add`. Apare o fereastră, unde indicăm numele, descriere.
+Selectăm fișierul `SampleCurrencyData.txt`, apasând butonul `Browse`.
+
+![](./images/flat_file_import.png)
+
+Acum dacă trecem în meniul `Columns`, vedem meniul de configurarea a tipurilor de coloane.
+
+![](./images/columns_menu.png)
+
+Trebuie să dăm câte un nume descriptiv la fiecare coloană și să le atribuim tipurile corecte de date.
+Pentru aceasta, trecem în meniul Advanced, și schimbăm denumirea la fiecare coloană, folosind
+grid-ul de proprietăți în partea dreaptă.
+
+![](./images/flat_file_columns.png)
+
+Apăsăm Suggest Types și facem click pe OK, lăsând toate opțiunile la valorile lor implicite.
+
+![](./images/suggest_types.png)
+
+Sistemul a putut ghici tipul de date la numere corect, dar a evaluat șirurile
+care reprezintă data și timpul ca simplu șiruri, dar nu ca `date`.
+Din această cauză trebuie s-o schimbăm la `date` manual.
+
+
+## Configurarea managerului OLE
+
+Managerul OLE permite a se conecta la baza de date.
+
+![](./images/oledb.png)
+
+Acesta lucrează în același mod ca și din etapa setării cubului, de aceea nu arăt procedura de crearea.
+
+
+## Conectarea fluxului de date dintre intrare și destinație
+
+Ca să conectăm manager-urile acestea unul la altul, trebuie să creăm așa numitul Data Flow.
+Acesta include și mecanismele de transformare și curățare a datelor.
+
+### Crearea Data Flow
+
+![](./images/data_flow_create.png)
+
+Îi putem schimba denumirea, apăsând `F2` și scriind denumirea nouă.
+
+![](./images/data_flow_renamed.png)
+
+Acum trebuie să adaugăm un Flat File source, care va încărca un fișier cu date, folosind schema definită
+în Flat File connection manager creat anterior.
+
+![](./images/create_source.png)
+
+Apăsăm de doi ori pentru a deschide meniul de configurare a sursei și apăsăm Ok.
+
+![](./images/source_config.png)
+
+### Configurarea transformărilor
+
+Acum trebuie să configurăm în ce mod să se realizeze transformarea, folosind Lookup transformation:
+
+- Prima transformare va face un lookup de CurrencyKey din tabelul DimCurrecy pe baza la coloana CurrencyID.
+
+- A doua transformare va face un lookup de DateKey din tabelul DimDate pe baza la coloana CurrencyDate.
+
+![](./images/lookup.png)
+
+Facem dublu click și trecem la meniul Connection.
+Aici, scriem următoarea interogarea SQL ca sursă de date.
+Această interogarea include toate datele din tabelul DimCurrency unde tipul valutei este unul din formate
+de intrare suportate.
+Acestea ca atare trebuie fi extrase din fișierele de intrare, dar drept test vom face doar așa.
+
+![](./images/lookup_query.png)
+
+Acum conectăm proprietățile CurrencyID cu CurrencyAlternateKey din baza de date pentru a realiza lookup-ul,
+și punem bifa pe lângă CurrencyKey ca s-o facem output-ul lookup-ului.
+
+![](./images/lookup_columns.png)
+
+Plasăm o componentă pentru al doilea lookup.
+Conectăm primul lookup (săgeata albastră) la componenta nouă.
+În fereastra care a apărul selectăm Matched Lookup.
+
+![](./images/connect_lookups.png)
+
+În meniul General alegem partial cache (tutorialul zice să facem așa, nu știu pentru ce este necesar).
+În meniul Connection alegem tabelul DimDate.
+
+![](./images/dim_date.png)
+
+Configurăm lookup-ul să mapeze CurrencyDate la DateKey, cheia principală din baza de date.
+
+![](./images/date_key_map.png)
+
+### Conectarea destinației
+
+Rămâne să conectăm un OLE DB Destination pentru a realiza scrierea finală în baza de date.
+Conectăm ultimul Lookup la nodul de destinație (săgeata albastră).
+
+![](./images/output_connection.png)
+
+În meniul de configurare a noului nod, selectăm tabelul FactCurrencyRate:
+
+![](./images/fact_currency_rate.png)
+
+Apăsăm New pentru a crea un tabel destinație nou cu aceleași coloane ca și tabelul de referință.
+
+![](./images/new_table.png)
+
+Configurăm mapările pentru toate coloanele:
+
+![](./images/mappings.png)
+
+Am terminat configurarea.
+
+## Rularea pachetului
+
+Pentru a rula pachetul, apăsăm Start.
+În cazul meu, am primit mesajul că execuția s-a terminat cu succes.
+
+Pentru a confirma că datele au fost adăugate, rulăm o interogare:
+
+![](./images/query_new_table.png)
+
+
+## Concluzii
+
+Personal, nu aș folosi sistemul acesta în sisteme reale.
+Îmi plac mai mult sisteme realizate în limbaje de programare, 
+deoarece atunci aveți mai multă flexibilitate, și mai puțin duplicare de logică.
+Puteți utiliza și orice modalități de programare pentru a simplifica configurarea sistemului.
+
+
+# Laborator 3: Crearea unui Raport în SSRS
+
+## Introducere
+
+SSRS (SQL Server Reporting Services) este un instrument care permite ...
+
+## Crearea proiectului
+
+Deschidem Visual Studio și instanțiem șablonul Report Server Project.
+
+![](./images/report_project.png)
+
+![](./images/report_project_name.png)
+
+
+## Configurarea unui Data Source
+
+Procesul aici este asemănător cu cela descris anterior, de aceea nu explic detaliat.
+
+![](./images/create_data_source.png)
+
+![](./images/connection_properties.png)
+
+## Crearea reportului
+
+Apăsăm right click pe Reports, Add.
+Clar că selectăm conexiunea existentă, numai ce creată.
+
+### Configurarea interogării
+
+Raportul permite crearea interogării folosind builder-ul, sau a unei interogări SQL.
+Pentru simplitate, vom scrie textul interogării direct în wizard-ul de creare a raportului.
+
+Am elaborat astfel de interogare:
+
+![](./images/sql_query.png)
+
+Și am pus-o ca Query string
+
+Acum selectăm tipul. Vom lăsa varianta implicită.
+
+![](./images/type.png)
+
+Am configurat output-ul în așa mod:
+
+![](./images/report_output.png)
+
+Apăsăm Finish.
+
+## Vizualizarea rezultatelor
+
+Putem privi reportul, apăsând "Preview".
+
+![](./images/report_preview.png)
+
+Putem sălva reportul în formatul, de exemplu, PDF, apăsând iconița respectivă:
+
+![](./images/save_report.png)
+
+![](./images/pdf_in_browser.png)
+
+## Concluzii
+
+Funcția este utilă deoarece produce reporturi într-un format consistent.
+Are foarte multe opțini pe care nu le-am descris aici, ca, de exemplu, 
+modalitățile de vizualizare și de formatare a tabelelor, gruparea, totalizarea,
+adăugarea stilurilor, ș.a.
